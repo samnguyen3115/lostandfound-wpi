@@ -27,8 +27,10 @@ class User(UserMixin, db.Model):
     id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
     username: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), unique=True, nullable=False)
     email: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(120), unique=True, nullable=False)
+    phonenum: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(10), unique=True, nullable=False)
     password_hash: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(256))
     posts: sqlo.WriteOnlyMapped[list["Post"]] = sqlo.relationship("Post", back_populates='writer', cascade="all, delete-orphan")
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -48,7 +50,7 @@ class User(UserMixin, db.Model):
 class Tag(db.Model):
     id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
     name: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(50), unique=True, nullable=False)
-    category: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(20), nullable=False)  # e.g., "color" or "building"
+    category: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(20), nullable=False)  
 
     def __repr__(self):
         return f"<Tag id={self.id} name={self.name} category={self.category}>"
@@ -58,8 +60,10 @@ class Tag(db.Model):
 class Post(db.Model):
     id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
     userid: sqlo.Mapped[int] = sqlo.mapped_column(sqla.ForeignKey(User.id, ondelete="CASCADE"), index=True)
-    title: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(150), nullable=False)
-    description: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(1500), nullable=False)
+    title: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(80), nullable=False)
+    type: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(10), nullable=False)
+    left_location: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(150), nullable=True)
+    reward: sqlo.Mapped[Optional[int]] = sqlo.mapped_column(sqla.Integer, nullable=True)
     timestamp: sqlo.Mapped[Optional[datetime]] = sqlo.mapped_column(default=lambda: datetime.now(timezone.utc))
 
     # Relationships for color and building tags
@@ -84,6 +88,8 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"<Post id={self.id} title={self.title}>"
+    
+
 
 
 # Image Store Model

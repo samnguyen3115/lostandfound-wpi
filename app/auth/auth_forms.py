@@ -9,6 +9,7 @@ from app import db
 class RegistrationForm(FlaskForm):
     username = StringField('Username',validators= [DataRequired()])
     email = StringField('Email',validators= [DataRequired(),Email()])
+    phonenum = StringField('Phone Number',validators= [DataRequired()])
     password = PasswordField('Password',validators= [DataRequired()])
     password2 = PasswordField('Password',validators= [DataRequired(),EqualTo('password')])
     submit = SubmitField('Post')
@@ -22,6 +23,8 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalars(query).first()
         if user is not None:
             raise validators.ValidationError('Email is already existed, Please use a different email.')
+        if not email.data.endswith('@wpi.edu'):
+            raise ValidationError("Email must be a WPI email ending with 'wpi.edu'")
         
 class LoginForm(FlaskForm):
     username = StringField('username',validators= [DataRequired()])

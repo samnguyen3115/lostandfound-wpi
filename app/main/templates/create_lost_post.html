@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% import 'bootstrap_wtf.html' as wtf %} {% block
 content %}
 
-<h1 style="text-align: center">What did you find?</h1>
+<h1 style="text-align: center">What did you lose?</h1>
 
 {% if form %}
 <div class="create-post">
@@ -10,12 +10,6 @@ content %}
     form.title.errors %}
     <ul class="error-messages">
       {% for error in form.title.errors %}
-      <li>{{ error }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {{wtf.form_field(form.body)}} {% if form.body.errors %}
-    <ul class="error-messages">
-      {% for error in form.body.errors %}
       <li>{{ error }}</li>
       {% endfor %}
     </ul>
@@ -32,10 +26,22 @@ content %}
         {{ form.building_tag(class="form-select") }}
       </div>
     </div>
-
-    <div style="margin-top:10px; flex-direction: column;display: flex;flex-wrap: wrap;">
-      {{ form.image.label }}
-      {{ form.image }}<br />
+    {{wtf.form_field(form.reward)}} {% if form.reward.errors %}
+    <ul class="error-messages">
+      {% for error in form.reward.errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <div
+      style="
+        margin-top: 10px;
+        flex-direction: column;
+        display: flex;
+        flex-wrap: wrap;
+      "
+    >
+      {{ form.image.label }} {{ form.image }}<br />
     </div>
     <div>
       {{ form.submit(class="btn btn-danger", style="margin-top: 10px; display:

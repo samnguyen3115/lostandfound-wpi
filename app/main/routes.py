@@ -8,7 +8,7 @@ import sqlalchemy as sqla
 
 from app import db
 from app.main.models import Post,Tag, postTags, ImageStore,Building
-from app.main.forms import PostForm, FilterForm
+from app.main.forms import  FilterForm, FoundPostForm,LostPostForm
 
 from app.main import main_blueprint as bp_main
 
@@ -19,48 +19,51 @@ def index():
     form = FilterForm()
     color_filter = request.args.get('color_filter')
     building_filter = request.args.get('building_filter')
+    post_type = request.args.get('post_type','found')
     form.color_filter.data = color_filter  
     form.building_filter.data = building_filter
     print(f"Color Filter: {color_filter}")
     print(f"Building Filter: {building_filter}")
+    print(f"Post Type: {post_type}")
     # Start building the query for all posts ordered by timestamp
-    query = db.session.scalars(sqla.select(Post).order_by(Post.timestamp.desc()))
-
+    query = db.session.scalars(sqla.select(Post).where(Post.type == post_type).order_by(Post.timestamp.desc()))
+    
     # If there is a color filter, add the condition to filter based on the color tag's name
     if color_filter and color_filter != '':
         if  building_filter and building_filter != '':
-            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.color_tag_id == color_filter , Post.building_tag_id == building_filter)))
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.color_tag_id == color_filter , Post.building_tag_id == building_filter,Post.type == post_type)))
         else:
-            query = db.session.scalars(sqla.select(Post).where(Post.color_tag_id == color_filter ))
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.color_tag_id == color_filter ,Post.type == post_type) ))
     else:
        if(building_filter) and building_filter != '':
-            query = db.session.scalars(sqla.select(Post).where(Post.building_tag_id == building_filter))
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.building_tag_id == building_filter,Post.type == post_type)))
 
 
     refresh = request.args.get('submit2')
     if refresh:
-        query = db.session.scalars(sqla.select(Post).order_by(Post.timestamp.desc()))
+        query = db.session.scalars(sqla.select(Post).where(Post.type == post_type).order_by(Post.timestamp.desc()))
 
      # Execute the query to get the filtered posts
     all_posts = query.all()
     if not all_posts:
         flash('No posts found with the selected filters')
-        all_posts = db.session.scalars(sqla.select(Post).order_by(Post.timestamp.desc())).all()   
+        all_posts = db.session.scalars(sqla.select(Post).where(Post.type == post_type).order_by(Post.timestamp.desc())).all()   
     
     # Render the page with the filtered posts
     return render_template('index.html', title="Lost And Found Portal", posts=all_posts, form=form)
 
 
-@bp_main.route('/post', methods=['GET', 'POST'])
+@bp_main.route('/post/found', methods=['GET', 'POST'])
 @login_required
-def postsmile():
-    form = PostForm()
+def post_found():
+    form = FoundPostForm()
     if form.validate_on_submit():
         post = Post(writer = current_user,
                     title=form.title.data,
                     color_tag=form.color_tag.data,
                     building_tag=form.building_tag.data,
-                    description=form.body.data)
+                    left_location=form.left_location.data,
+                    type='found' )
         db.session.add(post)
         db.session.commit()
         if form.image.data:
@@ -70,9 +73,35 @@ def postsmile():
             image = ImageStore(post_id=post.id, image_data=image_data, image_type=image_type)
             db.session.add(image)
             db.session.commit()
-        flash('Your new smile post is created')
+        flash('Your new post is created')
         return redirect(url_for('main.index'))
-    return render_template('create.html', title='Post', form=form)
+    return render_template('create_found_post.html', title='Post', form=form)
+
+@bp_main.route('/post/lost', methods=['GET', 'POST'])
+@login_required
+def post_lost():
+    form = LostPostForm()
+    if form.validate_on_submit():
+        post = Post(writer = current_user,
+                    title=form.title.data,
+                    color_tag=form.color_tag.data,
+                    building_tag=form.building_tag.data,
+                    reward=form.reward.data,
+                    type='lost' )
+        db.session.add(post)
+        db.session.commit()
+        if form.image.data:
+            image_file = form.image.data
+            image_data = image_file.read()  # Read the file data as binary
+            image_type = mimetypes.guess_type(image_file.filename)[0]  # Guess the MIME type based on file extension
+            image = ImageStore(post_id=post.id, image_data=image_data, image_type=image_type)
+            db.session.add(image)
+            db.session.commit()
+        flash('Your new post is created')
+        return redirect(url_for('main.index'))
+    return render_template('create_lost_post.html', title='Post', form=form)
+
+
 
 @bp_main.route('/image/<int:post_id>')
 def get_image(post_id):
@@ -97,7 +126,13 @@ def delete_post(post_id):
     flash('The post and its tags have been successfully deleted.')
     return redirect(url_for('main.index'))
 
-
+@bp_main.route('/post/<post_id>/detail', methods=['GET', 'POST'])
+@login_required
+def post_detail(post_id):
+    post = db.session.scalars(sqla.select(Post).where(Post.id == post_id)).first()
+    if post is None:
+        flash('Post not found')
+    return render_template('post_detail.html', title='Post Detail', post=post)
 
 @bp_main.route('/map', methods=['GET'])
 @login_required

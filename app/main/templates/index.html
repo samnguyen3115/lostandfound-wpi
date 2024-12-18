@@ -1,34 +1,74 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
+<h1 style="text-align: center; margin-top: 70px">
+  Welcome to Wpi Lost And Found Portal
+</h1>
+<br />
+<div class="postlist">
+  <!-- TODO: (milestone1) Format posts -->
+  <div class="post_choice_bar">
+    <form method="get" action="{{ url_for('main.index') }}">
+      <!-- Preserve the other filters as hidden inputs -->
 
-    <h1 style = "text-align: center;margin-top: 70px;">Welcome to Wpi Lost And Found Portal</h1>
-</br>
-    <!-- TODO: (milestone1) Format posts -->
-    <div class="postlist">
-        <div class="post_top_bar">
-            <form class="sort" method="GET" action="{{ url_for('main.index') }}">
-                <div class="form-group">
-                    <label for="sort_by">{{ form.color_filter.label }}</label>
-                    {{ form.color_filter(class="form-select") }}
-                    <label for="sort_by">{{ form.building_filter.label }}</label>
-                    {{ form.building_filter(class="form-select") }}
-                    {{ form.submit(class="button") }}
-                    {{ form.submit2(class="button button2")}}
 
-                </div>
-            </form>
+      <div class="choice-container">
+        <button
+          type="submit"
+          name="post_type"
+          value="found"
+          class="choice-button1 {% if request.args.get('post_type') == 'found' %}active{% endif %}"
+        >
+          Found Post
+        </button>
+        <button
+          type="submit"
+          name="post_type"
+          value="lost"
+          class="choice-button2 {% if request.args.get('post_type') == 'lost' %}active{% endif %}"
+        >
+          Lost Post
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="post_top_bar">
+    <form class="sort" method="GET" action="{{ url_for('main.index') }}">
+      <div class="form-group">
+        <!-- Preserve the post_type filter -->
+        <input
+          type="hidden"
+          name="post_type"
+          value="{{ request.args.get('post_type', '') }}"
+        />
+
+        <!-- Color Filter -->
+        <label for="color_filter">{{ form.color_filter.label }}</label>
+        {{ form.color_filter(class="form-select", id="color_filter") }}
+
+        <!-- Building Filter -->
+        <label for="building_filter">{{ form.building_filter.label }}</label>
+        {{ form.building_filter(class="form-select", id="building_filter") }}
+
+        <!-- Submit Button for applying filters -->
+        {{ form.submit(class="button", value="Filter") }}
+
+        <!-- Submit2 Button for refreshing the view -->
+        {{ form.submit2(class="button button2", value="Reset") }}
+      </div>
+    </form>
+  </div>
+
+  <div style="width: 100%; height: 10px"></div>
+  <div class="post-container">
+    {% for post in posts %}
+      <a href="{{ url_for('main.post_detail', post_id=post.id) }}" class="post-link">
+        <div class="post-box">
+          {% include '_post.html' %}
         </div>
-        
-        
-        
-    </br>    
-        {% for post in posts %}
-            <!-- Container for each individual post -->
-            <div class="post-box">
-                {% include '_post.html' %}
-            </div>
-        {% endfor %}
-    </div>
+      </a>
+    {% endfor %}
+  </div>
   
+</div>
 {% endblock %}

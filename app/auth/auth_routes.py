@@ -13,7 +13,8 @@ def register():
     rform = RegistrationForm()
     if rform.validate_on_submit():
         user = User(username = rform.username.data,
-                          email = rform.email.data)
+                          email = rform.email.data,
+                          phonenum = rform.phonenum.data)
         user.set_password(rform.password.data)
         db.session.add(user)
         db.session.commit()

@@ -15,23 +15,23 @@ def make_shell_context():
 
 color_tags = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'brown', 'black', 'white', 'gray']
 building_tags = [
-    'alden_memorial', 
-    'atwater_ken_lab', 
-    'fuller_lab', 
-    'gordon_library', 
-    'goddard_hall', 
-    'higgins_lab', 
-    'kaven_hall', 
-    'olin_hall', 
-    'campus_center', 
-    'salisbury_lab', 
-    'stratton_lab', 
-    'innovation_studio', 
-    'morgan_dining_hall', 
-    'sports_recreation_center', 
-    'harrington_auditorium', 
-    'unity_hall', 
-    'bartlett_center'
+    'Alden Memorial', 
+    'Atwater Kent Lab', 
+    'Fuller Lab', 
+    'Gordon Library', 
+    'Goddard Hall', 
+    'Higgins Lab', 
+    'Kaven Hall', 
+    'Olin Hall', 
+    'Rubin Campus Center', 
+    'Salisbury Labs', 
+    'Stratton Labs', 
+    'Innovation Studio', 
+    'Morgan Dining Hall', 
+    'Sports and Recreation Center', 
+    'Harrrington Auditorium', 
+    'Unity Hall', 
+    'Barlett Center'
 ]
 
 def add_default_tags():

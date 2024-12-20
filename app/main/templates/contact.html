@@ -1,0 +1,151 @@
+{% extends "base.html" %} {% block content %}
+<style>
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+  }
+
+  .content {
+    padding: 40px 15px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .card {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: left;
+    gap: 20px;
+  }
+  .card-content {
+    flex: 1;
+  }
+  .card-content h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  .card-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+    margin: 0;
+  }
+  .social-links {
+    margin-top: 10px;
+  }
+  .social-links a {
+    color: #2c3e50;
+    text-decoration: none;
+    margin-right: 15px;
+    font-size: 1.5rem;
+  }
+  .social-links a:hover {
+    color: #4ca1af;
+  }
+  .card img {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #2c3e50;
+  }
+  .card-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .card-wrapper .text-section {
+    flex: 1;
+    text-align: left;
+  }
+  .card-wrapper img {
+    flex-shrink: 0;
+  }
+  footer {
+    background-color: #f1f1f1;
+    color: #6c757d;
+    padding-left: 10px;
+    text-align: left;
+  }
+
+</style>
+<body>
+
+
+  <div class="container content">
+    <div class="card">
+      <div class="card-wrapper">
+        <div class="text-section">
+          <h2>Tran Minh Duc Nguyen</h2>
+          <p>
+            Sophomore | Class of 2027<br />
+            Major: Computer Science & Data Science<br />
+            Worcester Polytechnic Institute (WPI)
+          </p>
+          <div class="social-links">
+            <a href="mailto:tnguyen6@wpi.edu" title="Email"
+              ><img
+                style="width: 30px; height: 30px;border:0px;border-radius: 0px;"
+                src="{{ url_for('static', filename='img/email.svg') }}"
+                alt="email" /><i class="fas fa-envelope"></i
+            ></a>
+            <a href="tel:+15083738550" title="Phone"
+              ><img
+              style="width: 30px; height: 30px;border:0px;border-radius: 0px;"
+              src="{{ url_for('static', filename='img/phone.svg') }}"
+              alt="phone" /><i class="fas fa-phone"></i
+            ></a>
+            <a href="https://linkedin.com/in/your-profile" title="LinkedIn"
+              ><i class="fab fa-linkedin"><img
+                style="width: 30px; height: 30px;border:0px;border-radius: 0px;"
+                src="{{ url_for('static', filename='img/linkedin.svg') }}"
+                alt="linkedin" /></i
+            ></a>
+            <a href="https://instagram.com/your-profile" title="Github"
+              ><i class="fab fa-linkedin"><img
+                style="width: 27px; height: 27px;border:0px;border-radius: 0px;"
+                src="{{ url_for('static', filename='img/github.svg') }}"
+                alt="github" /><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
+        <img
+          src="{{ url_for('static', filename='img/me.JPG') }}"
+          alt="Tran Minh Duc Nguyen"
+        />
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>About Me</h2>
+      <p>
+        My name is Tran Minh Duc Nguyen, and I am currently a sophomore at
+        Worcester Polytechnic Institute , class of 2027. My majors are
+        Computer Science  and Data Science . I’m passionate about
+        leveraging technology to solve real-world problems and create meaningful
+        solutions that impact communities positively.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Get in Touch</h2>
+      <p>
+        Whether you have questions, feedback, or collaboration opportunities,
+        feel free to reach out. I’m always open to connecting with like-minded
+        individuals or anyone needing assistance.
+      </p>
+    </div>
+  </div>
+
+
+</body>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %} {% block content %}
+<style>
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+  }
+  .hero {
+    background: linear-gradient(to right, #ac2b37, #8a1f2c);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 10px;
+  }
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+  }
+  .content {
+    padding: 40px 15px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .content section {
+    margin-bottom: 40px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+  }
+  .content section h2 {
+    font-size: 2rem;
+    color: #ac2b37;
+    margin-bottom: 15px;
+  }
+  .content section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+  }
+  footer {
+    background-color: #f1f1f1;
+    color: #6c757d;
+    padding-left: 10px;
+    text-align: left;
+  }
+
+</style>
+<body>
+  <header class="hero">
+    <h1>About This Site</h1>
+    <p>
+      Connecting people, solving problems, and bringing lost items back home.
+    </p>
+  </header>
+
+  <div class="container content">
+    <section>
+      <h2>Our Mission</h2>
+      <p>
+        This site was created with one simple goal in mind: to reunite lost
+        items with their rightful owners. Whether you misplaced your favorite
+        umbrella on campus or found a stray pair of headphones in the library,
+        this platform is here to help. At its core, it's about community, trust,
+        and the power of collaboration. We believe that even the smallest acts
+        of kindness can make a big difference in someone's day.
+      </p>
+      <p>
+        By using technology to streamline the process, we aim to create a reliable
+        and accessible system for everyone. This is not just a tool; it is a step
+        toward building a more compassionate and connected world.
+      </p>
+    </section>
+
+    <section>
+      <h2>How It Started</h2>
+      <p>
+        This platform began as a personal project driven by a simple observation:
+        too many lost items go unclaimed. I noticed this issue firsthand and was
+        inspired to take action. From forgotten water bottles to lost backpacks,
+        the absence of an efficient way to report or search for these items was
+        evident. So, I decided to create a solution.
+      </p>
+      <p>
+        What started as a small initiative has grown into something meaningful,
+        powered by the idea that technology can bring us closer together.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why It Matters</h2>
+      <p>
+        Losing something can be stressful and frustrating, and the feeling of
+        helplessness that comes with it is all too common. This site aims to
+        alleviate that stress by creating a reliable platform to help individuals
+        recover their belongings. It’s more than just a lost and found; it’s a
+        symbol of care and community.
+      </p>
+      <p>
+        By providing an organized system for reporting and searching, we not only
+        help people find their lost items but also reduce waste and promote
+        sustainability. Every recovered item means less unnecessary replacement
+        and a step toward a more resource-conscious society.
+      </p>
+    </section>
+
+    <section>
+      <h2>Get Involved</h2>
+      <p>
+        Have ideas to improve the platform? Found a bug? I’d love to hear from
+        you! This site is built with care and dedication, but there’s always room
+        for growth and improvement. Your input is invaluable in making this
+        platform the best it can be.
+      </p>
+      <p>
+        Whether it’s through suggestions, feedback, or simply spreading the word,
+        every little bit helps. Together, we can ensure that lost items find their
+        way back to their rightful owners.
+      </p>
+    </section>
+
+
+  </div>
+
+  
+</body>
+
+{% endblock %}

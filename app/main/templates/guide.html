@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block content %}
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">How to Use the Lost and Found Web App</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>1. Posting a Lost Item</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Go to the <strong>"Post Item"</strong> dropdown in the navigation bar and select <strong>"Post Lost Item"</strong>.</li>
+                    <li>Fill in the required details, such as a description of the item, where you lost it, and the reward you're offering (if any).</li>
+                    <li>Upload a clear image of the lost item to help others identify it more easily.</li>
+                    <li>Click <strong>Submit</strong> to post your lost item.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>2. Posting a Found Item</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Go to the <strong>"Post Item"</strong> dropdown in the navigation bar and select <strong>"Post Found Item"</strong>.</li>
+                    <li>Fill in the required details, such as a description of the item and where you found it.</li>
+                    <li>Upload a clear image of the found item.</li>
+                    <li>Click <strong>Submit</strong> to post the found item.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>3. Using the Lost and Found Map</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Navigate to the <strong>"Lost and Found Map"</strong> page using the link in the navigation bar.</li>
+                    <li>On the map, click on the image of the building where you think the item might have been lost or found.</li>
+                    <li>The app will show you the location where lost and found items are usually kept within that building.</li>
+                </ol>
+                <p><strong>Tip:</strong> Check these locations before posting a lost or found item to save time!</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>4. Viewing Posts</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Log in and go to your <strong>Profile</strong> to view the items you have posted.</li>
+                    <li>Browse the dashboard to view items posted by others.</li>
+                    <li>Use filters like color or building location to narrow down the posts.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>5. Claiming an Item</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>If you find an item that matches your lost item, contact the poster using the contact information provided in the post.</li>
+                    <li>Arrange to meet and verify the item's details.</li>
+                </ol>
+                <p><strong>Note:</strong> Always verify the ownership of the item before handing it over.</p>
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"
+    ></script>
+</body>
+{%endblock%}

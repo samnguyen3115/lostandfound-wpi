@@ -1,10 +1,14 @@
-{% block content %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Interactive Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% if title %}
+    <title>{{ title }} - Dashboard</title>
+    {% else %}
+    <title>Welcome to WPI Lost And Found</title>
+    {% endif %}
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -16,17 +20,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        background-color: #f9f9f9;
-      }
-    </style>
   </head>
   <body>
     <nav
@@ -58,24 +51,38 @@
                 >Dashboard</a
               >
             </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
+            <li
+              class="nav-item border border-light px-2 ms-2 rounded-item dropdown"
+            >
               <a
-                class="nav-link"
+                class="nav-link dropdown-toggle"
                 style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.post_found') }}"
-                >Post Found Item</a
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
+                Post Item
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{{ url_for('main.post_found') }}"
+                    >Post Found Item</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{{ url_for('main.post_lost') }}"
+                    >Post Lost Item</a
+                  >
+                </li>
+              </ul>
             </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.post_lost') }}"
-                >Post Lost Item</a
-              >
-            </li>
+
             <li class="nav-item border border-light px-2 ms-2 rounded-item">
               <a
                 class="nav-link"
@@ -93,6 +100,8 @@
                 href="https://fs28.formsite.com/webteamwpiedu/lost-and-found/index.html?1574433553570="
                 >Police Form</a
               >
+            </li>
+             
             </li>
             {% endif %}
           </ul>
@@ -122,38 +131,88 @@
                 class="nav-link"
                 style="color: white"
                 aria-current="page"
-                href="{{ url_for('auth.logout') }}"
-                >Logout</a
+                href="{{ url_for('main.display_profile',user_id =current_user.id) }}"
               >
+                <img
+                  src="{{ url_for('static', filename='img/user.svg') }}"
+                  alt="User"
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                  "
+                />
+                <span class="profile-tooltip">{{current_user.lastname}}</span>
+              </a>
             </li>
+
             {% endif %}
           </ul>
         </div>
       </div>
     </nav>
-    <img src ="{{ url_for('static', filename=theme) }}" style = "width: 100%;">
-    <h1 style="text-align: center; margin-top: 10px">{{name}}</h1>
+    <img src="{{ url_for('static', filename=theme) }}" style="width: 100vw;margin-left:-20px;" />
+    <h1 style="text-align: center; margin-top: 20px">{{name}}</h1>
     <div class="places-container">
       {% for i in range(count) %}
-          <div class="place">
-              <div class="content-container">
-                  <div class="text-content">
-                      <h2 style="margin: 10px;">{{ place[i] }}</h2>
-                      <p style="margin: 10px;">{{ body[i] }}</p>
-                  </div>
-                  <div class="image-content">
-                      <img 
-                      src="{{ url_for('static', filename=image[i]) }}" 
-                      alt="Image of {{ place[i] }}">
-                  </div>
-              </div>
+      <div class="place">
+        <div class="content-container">
+          <div class="text-content">
+            <h2 style="margin: 10px">{{ place[i] }}</h2>
+            <p style="margin: 10px">{{ body[i] }}</p>
           </div>
-          <br/>
+          <div class="image-content">
+            <img
+              src="{{ url_for('static', filename=image[i]) }}"
+              alt="Image of {{ place[i] }}"
+            />
+          </div>
+        </div>
+      </div>
+      <br />
       {% endfor %}
-  </div>
-  
-  
-  
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
   </body>
+  <footer
+    style="
+      background-color: #343a40;
+      color: white;
+      bottom: 0;
+      width: 100cw;
+      z-index: 1000;
+      margin-left: -16px;
+      margin-bottom: -2px;
+      margin-top: 4%;
+      padding-top: 20px;
+      overflow-x: hidden;
+      padding-right: 5px;
+    "
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <p>&copy; 2024 Lost and Found Web App. All Rights Reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="/about" class="btn btn-outline-light btn-sm me-2"
+            >About This Site</a
+          >
+          <a href="/guide" class="btn btn-outline-light btn-sm me-2"
+            >Instructions</a
+          >
+          <a href="/contact" class="btn btn-outline-light btn-sm me-2"
+            >Contact Us</a
+          >
+
+        </div>
+      </div>
+    </div>
+  </footer>
 </html>
-{% endblock %}
+

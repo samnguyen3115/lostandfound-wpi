@@ -51,6 +51,7 @@ class LostPostForm(FlaskForm):
         blank_text=''  
     )
     reward = IntegerField('Reward')
+    description = TextAreaField('Description', validators=[DataRequired(),Length(min=1, max=150)])
     image = FileField('Please add an image of the item', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
     ])    

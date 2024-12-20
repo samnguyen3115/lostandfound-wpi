@@ -25,8 +25,10 @@ postTags = db.Table(
 # User Model
 class User(UserMixin, db.Model):
     id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
-    username: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), unique=True, nullable=False)
     email: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(120), unique=True, nullable=False)
+    firstname: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), nullable=False)
+    lastname: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), nullable=False)
+    wpi_id: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(9), unique=True)
     phonenum: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(10), unique=True, nullable=False)
     password_hash: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(256))
     posts: sqlo.WriteOnlyMapped[list["Post"]] = sqlo.relationship("Post", back_populates='writer', cascade="all, delete-orphan")
@@ -37,12 +39,10 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return self.password_hash is not None and check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return f"<User id={self.id} username={self.username}>"
     
-    def get_user_posts(self):
-        return db.session.execute(self.posts.select().order_by(Post.timestamp.desc())).scalars().all()
+    def total_posts(self):
+        return db.session.query(sqla.func.count(Post.id)).filter(Post.userid == self.id).scalar()
+
 
 
 
@@ -84,10 +84,11 @@ class Post(db.Model):
     )
 
     writer: sqlo.Mapped["User"] = sqlo.relationship("User", back_populates="posts")
-    image = db.relationship('ImageStore', backref='post', uselist=False)
+    image = db.relationship('ImageStore', backref='post', uselist=False,cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"<Post id={self.id} title={self.title}>"
+    
     
 
 

@@ -131,10 +131,130 @@
         </div>
       </div>
     </nav>
-  </div>
-  
-  
-  
+    <br />
+    <div class="post-detail-cont">
+      <div
+        style="
+          font-size: 1.4em;
+          text-align: center;
+          font-weight: bold;
+          border-radius: 8px 8px 0 0;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+          white-space: normal;
+          margin-bottom: 20px;
+        "
+      >
+        Item: {{ post.title }}
+      </div>
+      <div
+        class="post-detail-container"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 20px;
+        "
+      >
+        <!-- Information text on the left -->
+        <div class="post-details" style="flex: 1">
+          {% if post.type == 'found' %}
+          <div class="postbody">Color: {{ post.color_tag.name }}</div>
+          <div class="postbody">
+            Found building: {{ post.building_tag.name }}
+          </div>
+          <div class="postbody">Left location: {{ post.left_location }}</div>
+          {% else %}
+          <div class="postbody">Color: {{ post.color_tag.name }}</div>
+          <div class="postbody">
+            Left building: {{ post.building_tag.name }}
+          </div>
+          <div class="postbody">Reward: ${{ post.reward }}</div>
+          <div class="postbody">Description: {{ post.left_location }}</div>
+
+          {% endif %}
+        </div>
+
+        <!-- Image on the right -->
+        <div class="post-image" style="flex: 0 0 auto">
+          {% if post.image %}
+          <img
+            src="{{ url_for('main.get_image', post_id=post.id) }}"
+            alt="Post Image"
+            class="post-image"
+            style="
+              max-width: 100%;
+              height: auto;
+              border-radius: 8px;
+              border: 1px solid #ccc;
+            "
+          />
+          {% else %}
+          <p>No image available for this post.</p>
+          {% endif %}
+        </div>
+      </div>
+      <div
+        style="
+          padding-top: 20px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+        "
+      >
+        <button
+          class="btn btn-detail"
+          onclick="window.location.href='{{ url_for('main.index') }}'"
+        >
+          Back to Dashboard
+        </button>
+      </div>
+    </div>
+    <div class="poster-detail-cont">
+      <div
+        style="
+          font-size: 1.4em;
+          text-align: center;
+          font-weight: bold;
+          border-radius: 8px 8px 0 0;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+          white-space: normal;
+          margin-bottom: 20px;
+        "
+      >
+        Poster Information
+      </div>
+      <div class="postbody">
+        Name: {{ post.writer.firstname }} {{ post.writer.lastname }}
+      </div>
+      <div class="postbody">Email: {{ post.writer.email }}</div>
+      <div class="postbody">Phone number: +1 {{ post.writer.phonenum }}</div>
+      <div
+        style="
+          padding-top: 20px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+        "
+      >
+      {% if post.writer == current_user %}
+        <button
+          class="btn btn-detail"
+          onclick="window.location.href='{{ url_for('main.display_profile',user_id = current_user.id) }}'"
+        >
+          Go to Profile
+        </button>
+      {% else %}
+        <button
+          class="btn btn-detail"
+          onclick="window.location.href='{{ url_for('main.display_profile', user_id=post.writer.id) }}'"
+        >
+          View Profile
+        </button>
+      {% endif %}
+      </div>
+    </div>
   </body>
 </html>
 {% endblock %}

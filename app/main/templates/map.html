@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Interactive Map</title>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -25,6 +26,13 @@
         align-items: center;
         justify-content: center;
         background-color: #f9f9f9;
+      }
+      footer {
+        background-color: #f1f1f1;
+        color: #6c757d;
+        padding-left: 10px;
+        text-align: left;
+        padding-top: 20px;
       }
     </style>
   </head>
@@ -58,15 +66,38 @@
                 >Dashboard</a
               >
             </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
+            <li
+              class="nav-item border border-light px-2 ms-2 rounded-item dropdown"
+            >
               <a
-                class="nav-link"
+                class="nav-link dropdown-toggle"
                 style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.postsmile') }}"
-                >Post Found Item</a
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
+                Post Item
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{{ url_for('main.post_found') }}"
+                    >Post Found Item</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{{ url_for('main.post_lost') }}"
+                    >Post Lost Item</a
+                  >
+                </li>
+              </ul>
             </li>
+
             <li class="nav-item border border-light px-2 ms-2 rounded-item">
               <a
                 class="nav-link"
@@ -85,6 +116,7 @@
                 >Police Form</a
               >
             </li>
+
             {% endif %}
           </ul>
           <ul class="navbar-nav mb-2 mb-lg-0">
@@ -113,15 +145,39 @@
                 class="nav-link"
                 style="color: white"
                 aria-current="page"
-                href="{{ url_for('auth.logout') }}"
-                >Logout</a
+                href="{{ url_for('main.display_profile',user_id = current_user.id) }}"
               >
+                <img
+                  src="{{ url_for('static', filename='img/user.svg') }}"
+                  alt="User"
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                  "
+                />
+                <span class="profile-tooltip">{{current_user.lastname}}</span>
+              </a>
             </li>
+
             {% endif %}
           </ul>
         </div>
       </div>
     </nav>
+
+    <div class="container mt-3">
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+      <div class="alert alert-info" role="alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
     <h1 style="text-align: center; margin-top: 10px">WPI Map</h1>
     <p style="text-align: center; margin-top: 10px; margin-bottom: 20px">
       Please choose the building you want to know the Lost And Found spot
@@ -141,6 +197,7 @@
           border-radius: 10px;
           margin: 20px;
           width: 90%;
+          margin-bottom: 80px;
         "
       />
 
@@ -323,5 +380,39 @@
       });
     </script>
   </body>
+  <footer
+    style="
+      background-color: #343a40;
+      color: white;
+      bottom: 0;
+      width: 100cw;
+      z-index: 1000;
+      margin-left: -16px;
+      margin-bottom: -2px;
+      margin-top: 4%;
+      padding-top: 20px;
+      overflow-x: hidden;
+      padding-right: 5px;
+    "
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <p>&copy; 2024 Lost and Found Web App. All Rights Reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="/about" class="btn btn-outline-light btn-sm me-2"
+            >About This Site</a
+          >
+          <a href="/guide" class="btn btn-outline-light btn-sm me-2"
+            >Instructions</a
+          >
+          <a href="/contact" class="btn btn-outline-light btn-sm me-2"
+            >Contact Us</a
+          >
+        </div>
+      </div>
+    </div>
+  </footer>
 </html>
 {% endblock %}

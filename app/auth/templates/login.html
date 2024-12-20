@@ -6,7 +6,7 @@
 <h1 > Sign in</h1>
 <form action ="{{ url_for('auth.login') }}" method = "POST">
     {{ form.hidden_tag()}}
-    {{wtf.form_field(form.username)}}
+    {{wtf.form_field(form.email)}}
     {{wtf.form_field(form.password)}}
     {{wtf.form_field(form.remember_me)}}
     {{wtf.form_field(form.submit)}}

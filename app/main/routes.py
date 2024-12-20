@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 import sqlalchemy as sqla
 
 from app import db
-from app.main.models import Post,Tag, postTags, ImageStore,Building
+from app.main.models import Post,Tag, postTags, ImageStore,Building,User
 from app.main.forms import  FilterForm, FoundPostForm,LostPostForm
 
 from app.main import main_blueprint as bp_main
@@ -87,6 +87,7 @@ def post_lost():
                     color_tag=form.color_tag.data,
                     building_tag=form.building_tag.data,
                     reward=form.reward.data,
+                    left_location=form.description.data,
                     type='lost' )
         db.session.add(post)
         db.session.commit()
@@ -112,19 +113,24 @@ def get_image(post_id):
 
 
 
-@bp_main.route('/post/<post_id>/delete', methods=['POST'])
+@bp_main.route('/post/delete/<int:post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = db.session.scalars(sqla.select(Post).where(Post.id == post_id)).first()
-    if post:
-        tags = db.session.scalars(sqla.select(Tag).join(Post.tags).where(Post.id == post_id))
-        for tag in tags:
-            post.tags.remove(tag)
-    db.session.commit()
+    post = Post.query.get_or_404(post_id)
+    if post.userid != current_user.id:
+        flash("You are not authorized to delete this post.", "danger")
+        return redirect(url_for('main.index'))
+
+    # Delete associated images explicitly if cascading is not enabled
+    ImageStore.query.filter_by(post_id=post_id).delete()
+
+    # Delete the post
     db.session.delete(post)
     db.session.commit()
-    flash('The post and its tags have been successfully deleted.')
+
+    flash("Post deleted successfully!", "success")
     return redirect(url_for('main.index'))
+
 
 @bp_main.route('/post/<post_id>/detail', methods=['GET', 'POST'])
 @login_required
@@ -152,4 +158,49 @@ def map_building(building_id):
     places_info = zip(place, body, image)
     return render_template('building.html', title='Map', building_id=building_id, name=name, place=place, body=body, count=count, theme=theme, image=image,places_info=places_info)
 
+@bp_main.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def display_profile(user_id):
+    user = db.session.get(User, user_id)
+    form = FilterForm()
+    color_filter = request.args.get('color_filter')
+    building_filter = request.args.get('building_filter')
+    form.color_filter.data = color_filter  
+    form.building_filter.data = building_filter
+    print(f"Color Filter: {color_filter}")
+    print(f"Building Filter: {building_filter}")
+    # Start building the query for all posts ordered by timestamp
+    query = db.session.scalars(sqla.select(Post).where(Post.writer == user).order_by(Post.timestamp.desc()))
 
+    # If there is a color filter, add the condition to filter based on the color tag's name
+    if color_filter and color_filter != '':
+        if  building_filter and building_filter != '':
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.color_tag_id == color_filter , Post.building_tag_id == building_filter,Post.writer == user)))
+        else:
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_(Post.color_tag_id == color_filter , Post.writer == user)))
+    else:
+       if(building_filter) and building_filter != '':
+            query = db.session.scalars(sqla.select(Post).where(sqla.and_( Post.building_tag_id == building_filter,Post.writer == user)))
+
+
+    refresh = request.args.get('submit2')
+    if refresh:
+        query = db.session.scalars(sqla.select(Post).where(Post.writer == user).order_by(Post.timestamp.desc()))
+
+    all_posts = query.all()
+    if not all_posts:
+        flash('No posts found with the selected filters')
+        all_posts = db.session.scalars(sqla.select(Post).where(Post.writer == user).order_by(Post.timestamp.desc())).all()   
+    return render_template('display_profile.html', title='My Profile',user = user, posts=all_posts, form=form)
+
+@bp_main.route('/guide', methods=['GET', 'POST'])
+def guide():
+    return render_template('guide.html', title='Guide')
+
+@bp_main.route('/about', methods=['GET', 'POST'])
+def about():
+    return render_template('about.html', title='About')
+
+@bp_main.route('/contact', methods=['GET', 'POST'])
+def contact():
+    return render_template('contact.html', title='Contact')

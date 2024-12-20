@@ -12,9 +12,12 @@ from app.main.models import User
 def register():
     rform = RegistrationForm()
     if rform.validate_on_submit():
-        user = User(username = rform.username.data,
-                          email = rform.email.data,
-                          phonenum = rform.phonenum.data)
+        user = User(
+            firstname = rform.first_name.data,
+            lastname = rform.last_name.data,
+            email = rform.email.data,
+            wpi_id = rform.wpi_id.data,
+            phonenum = rform.phonenum.data,)
         user.set_password(rform.password.data)
         db.session.add(user)
         db.session.commit()
@@ -29,14 +32,14 @@ def login():
         return redirect(url_for('main.index'))
     lform = LoginForm()
     if lform.validate_on_submit():
-        query = sqla.select(User).where(User.username == lform.username.data)
+        query = sqla.select(User).where(User.email == lform.email.data)
         user = db.session.scalars(query).first()
         if user is None or not user.check_password(lform.password.data):
-            flash('Invalid username or password')
+            flash('Invalid email or password')
             return redirect(url_for('auth.login'))
         
         login_user(user, remember=lform.remember_me.data)     
-        flash(f'The user {current_user.username} has successfully logged in! Authenticated: {current_user.is_authenticated}',"flash-container")
+        flash(f'The user has successfully logged in! Authenticated: {current_user.is_authenticated}',"flash-container")
         return redirect(url_for('main.index'))
 
     return render_template('login.html', form=lform)

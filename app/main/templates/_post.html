@@ -1,43 +1,46 @@
 <table id="post-{{post.id}}" class="posttable" style="width: 100%" valign="top">
   <tr>
     <td colspan="3">
-      <div class="posttitle">{{post.title}}</div>
+      <div class="posttitle">{{ post.title }}</div>
     </td>
   </tr>
-  {% if post.post_type == 'found' %}
+  {% if post.type == 'found' %}
+  <tr>
     <td colspan="3" style="text-align: center" valign="bottom">
-      <div class="postbody">Color : {{post.color_tag.name}}</div>
-      <div class="postbody">Found building : {{post.building_tag.name}}</div>
-      <div class="postbody">Left location: {{post.left_location}}</div>
+      <div class="postbody">Color : {{ post.color_tag.name }}</div>
+      <div class="postbody">Found building : {{ post.building_tag.name }}</div>
+      <div class="postbody">Left location: {{ post.left_location }}</div>
     </td>
+  </tr>
   {% else %}
+  <tr>
     <td colspan="3" style="text-align: center" valign="bottom">
-      <div class="postbody">Color : {{post.color_tag.name}}</div>
-      <div class="postbody">Left building : {{post.building_tag.name}}</div>
-      <div class="postbody">Reward : {{post.reward}}</div>
+      <div class="postbody">Color : {{ post.color_tag.name }}</div>
+      <div class="postbody">Left building : {{ post.building_tag.name }}</div>
+      <div class="postbody">Reward : ${{ post.reward }}</div>
     </td>
+  </tr>
   {% endif %}
-  
 
   <tr>
-    <td>
-      <!-- <div style="width: 100%; display: flex; justify-content: center; margin-left: auto; margin-right: auto;">
-        {% if post.image %}
-          <img
-            src="{{ url_for('main.get_image', post_id=post.id) }}"
-            alt="Post Image"
-            class="post-image"
-          />
-        {% else %}
-          <p>No image available for this post.</p>
-        {% endif %}
-      </div> -->
-      <div class="posttimestamp" style="display: block">
+    <td colspan="3">
+      <div class="posttimestamp" style="text-align: center; display: block">
         Posted on : {{ post.timestamp.strftime('%A, %d %B %Y') }} by {{
-        post.writer.username }}
+        post.writer.firstname }}
       </div>
     </td>
   </tr>
-</table>
 
-{% block script %} {% endblock %}
+  {% if post.writer == current_user %}
+  <tr>
+    <td colspan="3" style="text-align: center; padding-top: 10px">
+      <form
+        action="{{ url_for('main.delete_post', post_id=post.id) }}"
+        method="post"
+      >
+        <input type="submit" value="Delete" class="btn btn-danger" />
+      </form>
+    </td>
+  </tr>
+  {% endif %}
+</table>

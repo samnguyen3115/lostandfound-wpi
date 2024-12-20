@@ -32,7 +32,16 @@ content %}
       <li>{{ error }}</li>
       {% endfor %}
     </ul>
+    
     {% endif %}
+    {{wtf.form_field(form.description)}} {% if form.description.errors %}
+    <ul class="error-messages">
+      {% for error in form.left_location.errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
     <div
       style="
         margin-top: 10px;

@@ -194,20 +194,94 @@
           {% endif %}
         </div>
       </div>
+      {% if current_user.type == "admin" %}
+      <h2>Report:</h2>
+      {% if reports %} {% for report in reports %}
+      <div class="postbody">Reported Reason: {{ report.report_reason }}</div>
+      {% endfor %} {% else %}
+      <div class="postbody">No reports found for this post.</div>
+      {% endif %} {% endif %}
+
       <div
         style="
           padding-top: 20px;
           display: flex;
-          justify-content: center;
-          gap: 20px;
+          justify-content: space-between; /* This will push the buttons to the sides */
         "
       >
+        <!-- Left Button -->
         <button
           class="btn btn-detail"
+          style="border: 1px black solid"
           onclick="window.location.href='{{ url_for('main.index') }}'"
         >
           Back to Dashboard
         </button>
+
+        <!-- Right Button -->
+        <!-- Report Button -->
+        {% if current_user.type == "user" %}
+        <button
+          class="btn btn-danger"
+          data-toggle="modal"
+          data-target="#reportModal"
+        >
+          Report Post
+        </button>
+        {%else%}
+        <form
+          action="{{ url_for('main.delete_post', post_id=post.id) }}"
+          method="post"
+        >
+          <input type="submit" value="Delete" class="btn btn-danger" />
+        </form>
+        {% endif %}
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="reportModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="reportModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report Post</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form
+                  id="reportForm"
+                  action="{{ url_for('main.report_post', post_id=post.id) }}"
+                  method="post"
+                >
+                  <div class="form-group">
+                    <label for="reportReason">Reason for Reporting</label>
+                    <textarea
+                      class="form-control"
+                      id="reportReason"
+                      name="report_reason"
+                      rows="3"
+                      required
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-danger">
+                    Submit Report
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="poster-detail-cont">
@@ -229,7 +303,14 @@
         Name: {{ post.writer.firstname }} {{ post.writer.lastname }}
       </div>
       <div class="postbody">Email: {{ post.writer.email }}</div>
-      <div class="postbody">Phone number: +1 {{ post.writer.phonenum }}</div>
+      {% if post.writer.phonenum %}
+      <div class="postbody">
+        Phone number: +1 ({{ post.writer.phonenum[:3] }}) {{
+        post.writer.phonenum[3:6] }} {{ post.writer.phonenum[6:] }}
+      </div>
+      {% else %}
+      <div class="postbody">Phone number: Not provided</div>
+      {% endif %}
       <div
         style="
           padding-top: 20px;
@@ -238,23 +319,36 @@
           gap: 20px;
         "
       >
-      {% if post.writer == current_user %}
+        {% if post.writer == current_user %}
         <button
           class="btn btn-detail"
+          style="border: 1px solid black;"
           onclick="window.location.href='{{ url_for('main.display_profile',user_id = current_user.id) }}'"
         >
           Go to Profile
         </button>
-      {% else %}
+        {% else %}
         <button
           class="btn btn-detail"
+          style="border: 1px solid black;"
           onclick="window.location.href='{{ url_for('main.display_profile', user_id=post.writer.id) }}'"
         >
           View Profile
         </button>
-      {% endif %}
+        {% endif %}
       </div>
     </div>
   </body>
 </html>
+<!-- Add Bootstrap CSS -->
+<link
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+
+<!-- Add jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 {% endblock %}

@@ -1,35 +1,33 @@
 from flask_wtf import FlaskForm
-import sqlalchemy as sqla
-from wtforms import SelectField, StringField, SubmitField,PasswordField,BooleanField,validators
-from wtforms.validators import  ValidationError, DataRequired, EqualTo, Email,Length
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from app.main.models import User
 from app import db
 
-
-
 class RegistrationForm(FlaskForm):
-    first_name = StringField('First name', validators=[DataRequired()])
-    last_name = StringField('Last name', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()] )
+    first_name = StringField('First Name', validators=[DataRequired(), Length(max=30)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=15)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     wpi_id = StringField('WPI ID', validators=[DataRequired(), Length(min=9, max=9)])
-    phonenum = StringField('Phone Number', validators=[DataRequired()])
-    password = PasswordField('Password',validators= [DataRequired()])
-    password2 = PasswordField('Password',validators= [DataRequired(),EqualTo('password')])
-    submit = SubmitField('Post')
-    def validate_email(self,email):
-        query = sqla.select(User).where(User.email == email.data)
-        user = db.session.scalars(query).first()
-        if user is not None:
-            raise validators.ValidationError('Email is already existed, Please use a different email.')
+    phonenum = StringField('Phone Number', validators=[Length(max=10)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('This email is already registered.')
         if not email.data.endswith('@wpi.edu'):
-            raise ValidationError("Email must be a WPI email ending with 'wpi.edu'")
+            raise ValidationError('Email must be a WPI email ending with @wpi.edu.')
+
     def validate_wpi_id(self, wpi_id):
-        query = sqla.select(User).where(User.wpi_id == wpi_id.data)
-        user = db.session.scalars(query).first()
-        if user is not None:
-            raise ValidationError('The ID is associated with another account! Please log in to your account.')
+        user = User.query.filter_by(wpi_id=wpi_id.data).first()
+        if user:
+            raise ValidationError('This WPI ID is already registered.')
+
 class LoginForm(FlaskForm):
-    email = StringField('email',validators= [DataRequired()])
-    password = PasswordField('Password',validators= [DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')

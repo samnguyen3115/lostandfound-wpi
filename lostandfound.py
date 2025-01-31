@@ -6,6 +6,8 @@ from app import create_app, db
 from app.main.models import Post, Tag,Building
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlo
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail,Message
 
 app = create_app(Config)
 
@@ -104,4 +106,3 @@ def initDB(*args, **kwargs):
 
 if __name__ == "__main__":
     app.run(debug=True)
-

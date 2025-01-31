@@ -540,3 +540,36 @@ a:hover {
   color: white;
   text-align: center;
 }
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap; /* Ensure proper alignment in flexbox */
+  justify-content: center; /* Center the buttons horizontally */
+  align-items: center; /* Align vertically */
+  width: 100%; /* Ensure it spans full width */
+  margin-top: 20px; /* Space from the post list */
+  padding: 10px 0; /* Add some spacing */
+}
+
+.pagination a, .pagination span {
+  padding: 10px 15px;
+  border: 1px solid #333; /* Match the .postlist border color */
+  border-radius: 5px;
+  margin: 5px; /* Space between buttons */
+  text-decoration: none;
+  color: #333;
+  background-color: white; /* Match background */
+  transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+  background-color: #ffd23e;
+  color: black;
+}
+
+.pagination .current-page {
+  background-color: #ac2b37;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #ac2b37;
+}

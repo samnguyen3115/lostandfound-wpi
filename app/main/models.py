@@ -29,9 +29,10 @@ class User(UserMixin, db.Model):
     firstname: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), nullable=False)
     lastname: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), nullable=False)
     wpi_id: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(9), unique=True)
-    phonenum: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(10), unique=True, nullable=False)
+    phonenum: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(11), unique=True, nullable=True)
     password_hash: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(256))
     posts: sqlo.WriteOnlyMapped[list["Post"]] = sqlo.relationship("Post", back_populates='writer', cascade="all, delete-orphan")
+    type: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(10), nullable=False, default="user")
 
 
     def set_password(self, password):
@@ -82,7 +83,7 @@ class Post(db.Model):
         primaryjoin="and_(Post.building_tag_id == Tag.id, Tag.category == 'building')",
         lazy="joined"
     )
-
+    report: sqlo.Mapped[list["Report"]] = sqlo.relationship("Report", backref='post', cascade='all, delete-orphan')
     writer: sqlo.Mapped["User"] = sqlo.relationship("User", back_populates="posts")
     image = db.relationship('ImageStore', backref='post', uselist=False,cascade='all, delete-orphan')
 
@@ -90,6 +91,14 @@ class Post(db.Model):
         return f"<Post id={self.id} title={self.title}>"
     
     
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+    get_reported = db.Column(db.Boolean, nullable=False,default=False)
+    report_reason = db.Column(db.String(200), nullable=False,default = "Not reported")
+
+    def __repr__(self):
+        return f"<Report id={self.id} post_id={self.post_id} reporter_id={self.reporter_id}>"
 
 
 

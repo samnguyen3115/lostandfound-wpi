@@ -11,7 +11,14 @@ content %}
   <div class="postbody-container">
     <div class="postbody-box" style="width: 50%">
       <div class="postbody">Email: {{ user.email }}</div>
-      <div class="postbody">Phone number: +1 {{ user.phonenum }}</div>
+      {% if user.phonenum %}
+      <div class="postbody">
+        Phone number: +1 ({{ user.phonenum[:3] }}) {{ user.phonenum[3:6] }} {{
+        user.phonenum[6:] }}
+      </div>
+      {%else%}
+      <div class="postbody">Phone number: Not provided</div>
+      {% endif %}
     </div>
     <div class="postbody-box" style="width: 50%; text-align: right">
       <div class="postbody">WPI ID: {{ user.wpi_id }}</div>
@@ -39,14 +46,21 @@ content %}
 <br />
 <br />
 
+{%if current_user.type=="user"%}
 <div>
-  <h1 style="text-align: center; font-size: 30px; padding-top: 5px">
-    Posts
-  </h1>
+  <h1 style="text-align: center; font-size: 30px; padding-top: 5px">My Posts</h1>
 </div>
+{%else%}
+<div>
+  <h1 style="text-align: center; font-size: 30px; padding-top: 5px">Reported Posts</h1>
+</div>
+{%endif%}
 <div class="postlist">
   <div class="post_choice_bar">
-    <form method="get" action="{{ url_for('main.display_profile',user_id = user.id) }}">
+    <form
+      method="get"
+      action="{{ url_for('main.display_profile',user_id = user.id) }}"
+    >
       <!-- Preserve the other filters as hidden inputs -->
 
       <div class="choice-container">
@@ -70,7 +84,11 @@ content %}
     </form>
   </div>
   <div class="post_top_bar">
-    <form class="sort" method="GET" action="{{ url_for('main.display_profile',user_id =  user.id) }}">
+    <form
+      class="sort"
+      method="GET"
+      action="{{ url_for('main.display_profile',user_id =  user.id) }}"
+    >
       <div class="form-group">
         <!-- Preserve the post_type filter -->
         <input
@@ -97,6 +115,7 @@ content %}
   </div>
 
   <div style="width: 100%; height: 10px"></div>
+  {%if current_user.type=="admin"%}
   <div class="post-container">
     {% for post in posts %}
     <a
@@ -107,6 +126,18 @@ content %}
     </a>
     {% endfor %}
   </div>
+  {%else%}
+  <div class="post-container">
+    {% for post in reported_posts %}
+    <a
+      href="{{ url_for('main.post_detail', post_id=post.id) }}"
+      class="post-link"
+    >
+      <div class="post-box">{% include '_post.html' %}</div>
+    </a>
+    {% endfor %}
+  </div>
+  {%endif%}
 </div>
 
 {% endblock %}

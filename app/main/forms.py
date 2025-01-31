@@ -26,7 +26,7 @@ class FoundPostForm(FlaskForm):
         allow_blank=True,  
         blank_text=''  
     )
-    left_location = TextAreaField('Where did you left the item?', validators=[DataRequired(),Length(min=1, max=150)])
+    left_location = TextAreaField('Where did you leave the item?', validators=[DataRequired(),Length(min=1, max=150)])
 
     image = FileField('Please add an image of the item', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
@@ -58,7 +58,7 @@ class LostPostForm(FlaskForm):
     submit = SubmitField('Post')
     
 class FilterForm(FlaskForm):
-    color_filter = SelectField('Filter by color', choices=[
+    color_filter = SelectField('Filter by item color', choices=[
         ('',''),
         ('1', 'Red'),
         ('2', 'Orange'),

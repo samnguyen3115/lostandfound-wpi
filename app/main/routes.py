@@ -6,6 +6,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.orm import selectinload
 import sqlalchemy as sqla
 
+
 from app import db
 from app.main.models import Post, Report, Tag, postTags, ImageStore, Building, User
 from app.main.forms import FilterForm, FoundPostForm, LostPostForm
@@ -15,39 +16,48 @@ from app.main import main_blueprint as bp_main
 
 @bp_main.route('/', methods=['GET'])
 @bp_main.route('/index', methods=['GET', 'POST'])
-@login_required
 def index():
     form = FilterForm()
     color_filter = request.args.get('color_filter')
     building_filter = request.args.get('building_filter')
     post_type = request.args.get('post_type', 'found')
+    search_query = request.args.get('q', '')
     form.color_filter.data = color_filter
     form.building_filter.data = building_filter
+    print(f"Color Filter: {color_filter}")
+    print(f"Building Filter: {building_filter}")
+    print(f"Post Type: {post_type}")
 
+    # Get current page, default to 1
     page = request.args.get('page', 1, type=int)
-    per_page = 9
+    per_page = 9  # Number of posts per page
 
-    # Start building the query
-    query = sqla.select(Post).where(Post.type == post_type).order_by(Post.timestamp.desc())
+    # Start building the query for all posts ordered by timestamp
+    query = db.session.query(Post).filter(
+        Post.type == post_type).order_by(Post.timestamp.desc())
 
-    # Apply filters if selected
-    if color_filter:
-        query = query.where(Post.color_tag_id == color_filter)
-    if building_filter:
-        query = query.where(Post.building_tag_id == building_filter)
+    # Apply filters if there are any
 
-    # Reset filters if the refresh button is clicked
-    if request.args.get('submit2'):
-        query = sqla.select(Post).where(Post.type == post_type).order_by(Post.timestamp.desc())
+    if color_filter and color_filter != '':
+        query = query.filter(Post.color_tag_id ==
+                             color_filter, Post.type == post_type)
+    if building_filter and building_filter != '':
 
-    # Apply pagination
-    paginated_posts = db.paginate(query, page=page, per_page=per_page)
+        query = query.filter(Post.building_tag_id ==
+                             building_filter, Post.type == post_type)
+    if search_query:
+        query = query.filter(Post.title.ilike(f"%{search_query}%"))
 
-    # Flash message if no results found
-    if not paginated_posts.items:
-        flash('No posts found with the selected filters')
+    # Reset query if the refresh button is clicked
+    refresh = request.args.get('submit2')
+    if refresh:
+        query = db.session.query(Post).filter(
+            Post.type == post_type).order_by(Post.timestamp.desc())
 
-    return render_template('index.html', title="Lost And Found Portal", posts=paginated_posts, form=form)
+    # Apply pagination manually by using limit and offset
+    paginated_posts = query.paginate(page=page, per_page=per_page)
+
+    return render_template('index.html', title="Lost And Found Portal", posts=paginated_posts, form=form,search_query=search_query)
 
 
 @bp_main.route('/post/found', methods=['GET', 'POST'])
@@ -138,10 +148,10 @@ def delete_post(post_id):
 def post_detail(post_id):
     post = db.session.scalars(sqla.select(
         Post).where(Post.id == post_id)).first()
-    reports = post.report 
+    reports = post.report
     if post is None:
         flash('Post not found')
-    return render_template('post_detail.html', title='Post Detail', post=post, reports = reports)
+    return render_template('post_detail.html', title='Post Detail', post=post, reports=reports)
 
 
 @bp_main.route('/map', methods=['GET'])
@@ -288,3 +298,14 @@ def report_post(post_id):
 
     return redirect(url_for('main.post_detail', post_id=post.id))
 
+
+@bp_main.route('/search', methods=['GET'])
+def search_posts():
+    query = request.args.get('q', '')
+
+    if not query:
+        return jsonify({"error": "Query parameter 'q' is required"}), 400
+
+    results = Post.query.filter(Post.title.ilike(f"%{query}%")).all()
+
+    return jsonify([{"id": post.id, "title": post.title} for post in results])

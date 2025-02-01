@@ -1,341 +1,198 @@
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Post Detail</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
-    />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        background-color: #f9f9f9;
-      }
-    </style>
-  </head>
+{% extends "base.html" %} {% block content %}
+<html>
   <body>
-    <nav
-      class="navbar navbar-expand-lg navbar-dark"
-      style="background-color: #ac2b37"
-    >
-      <div class="container">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            {% if not current_user.is_anonymous %}
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.index') }}"
-                >Dashboard</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.post_found') }}"
-                >Post Found Item</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.post_lost') }}"
-                >Post Lost Item</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.map') }}"
-                >Lost And Found Map</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="https://fs28.formsite.com/webteamwpiedu/lost-and-found/index.html?1574433553570="
-                >Police Form</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-          <ul class="navbar-nav mb-2 mb-lg-0">
-            {% if current_user.is_anonymous %}
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('auth.register') }}"
-                >Register</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('auth.login') }}"
-                >Login</a
-              >
-            </li>
-            {% else %}
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('auth.logout') }}"
-                >Logout</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <br />
     <div class="post-detail-cont">
-      <div
-        style="
-          font-size: 1.4em;
-          text-align: center;
-          font-weight: bold;
-          border-radius: 8px 8px 0 0;
-          word-break: break-word;
-          overflow-wrap: anywhere;
-          white-space: normal;
-          margin-bottom: 20px;
-        "
-      >
-        Item: {{ post.title }}
-      </div>
-      <div
-        class="post-detail-container"
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 20px;
-        "
-      >
-        <!-- Information text on the left -->
-        <div class="post-details" style="flex: 1">
-          {% if post.type == 'found' %}
-          <div class="postbody">Color: {{ post.color_tag.name }}</div>
-          <div class="postbody">
-            Found building: {{ post.building_tag.name }}
-          </div>
-          <div class="postbody">Left location: {{ post.left_location }}</div>
-          {% else %}
-          <div class="postbody">Color: {{ post.color_tag.name }}</div>
-          <div class="postbody">
-            Left building: {{ post.building_tag.name }}
-          </div>
-          <div class="postbody">Reward: ${{ post.reward }}</div>
-          <div class="postbody">Description: {{ post.left_location }}</div>
-
-          {% endif %}
-        </div>
-
-        <!-- Image on the right -->
-        <div class="post-image" style="flex: 0 0 auto">
-          {% if post.image %}
-          <img
-            src="{{ url_for('main.get_image', post_id=post.id) }}"
-            alt="Post Image"
-            class="post-image"
+      <div class="post-detail-container">
+        <!-- Post Details -->
+        <div class="detail-cont">
+          <div
             style="
-              max-width: 100%;
-              height: auto;
-              border-radius: 8px;
-              border: 1px solid #ccc;
+              font-size: 1.4em;
+              text-align: center;
+              font-weight: bold;
+              border-radius: 8px 8px 0 0;
+              word-break: break-word;
+              overflow-wrap: anywhere;
+              white-space: normal;
+              margin-bottom: 20px;
+              background-color: #ac2b37;
+              color:white;
+              margin-top: -15px;
+              margin-left: -15px;
+              margin-right: -15px;
             "
-          />
+          >
+            Item: {{ post.title }}
+          </div>
+          {% if post.type == 'found' %}
+          <p class="postbody">Color: {{ post.color_tag.name }}</p>
+          <p class="postbody">Found building: {{ post.building_tag.name }}</p>
+          <p class="postbody">Left location: {{ post.left_location }}</p>
           {% else %}
-          <p>No image available for this post.</p>
+          <p class="postbody">Color: {{ post.color_tag.name }}</p>
+          <p class="postbody">Left building: {{ post.building_tag.name }}</p>
+          <p class="postbody">Reward: ${{ post.reward }}</p>
+          <p class="postbody">Description: {{ post.left_location }}</p>
           {% endif %}
         </div>
+
+        <!-- Poster Details -->
+        <div class="poster-detail-cont">
+          <div
+            style="
+              font-size: 1.4em;
+              text-align: center;
+              font-weight: bold;
+              border-radius: 8px 8px 0 0;
+              word-break: break-word;
+              overflow-wrap: anywhere;
+              white-space: normal;
+              margin-bottom: 20px;
+              background-color: #ac2b37;
+              color:white;
+              margin-top: -15px;
+              margin-left: -15px;
+              margin-right: -15px;
+            "
+          >
+            Poster Information
+          </div>
+          <p class="postbody">
+            Name: {{ post.writer.firstname }} {{ post.writer.lastname }}
+          </p>
+          <p class="postbody">Email: {{ post.writer.email }}</p>
+          {% if post.writer.phonenum %}
+          <p class="postbody">
+            Phone: +1 ({{ post.writer.phonenum[:3] }}) {{
+            post.writer.phonenum[3:6] }} {{ post.writer.phonenum[6:] }}
+          </p>
+          {% else %}
+          <p class="postbody">Phone: Not provided</p>
+          {% endif %}
+
+          <!-- Profile Button -->
+          <div class="button-container">
+            {% if post.writer == current_user %}
+            <button
+              class="btn btn-detail"
+              style ="background-color: #ac2b37;color:white;"
+              onclick="window.location.href='{{ url_for('main.display_profile',user_id = current_user.id) }}'"
+            >
+              Go to Profile
+            </button>
+            {% else %}
+            <button
+              class="btn btn-detail"
+              style ="background-color: #ac2b37;color:white;"
+              onclick="window.location.href='{{ url_for('main.display_profile', user_id=post.writer.id) }}'"
+            >
+              View Profile
+            </button>
+            {% endif %}
+          </div>
+        </div>
       </div>
-      {% if current_user.type == "admin" %}
-      <h2>Report:</h2>
-      {% if reports %} {% for report in reports %}
-      <div class="postbody">Reported Reason: {{ report.report_reason }}</div>
-      {% endfor %} {% else %}
-      <div class="postbody">No reports found for this post.</div>
-      {% endif %} {% endif %}
 
-      <div
-        style="
-          padding-top: 20px;
-          display: flex;
-          justify-content: space-between; /* This will push the buttons to the sides */
-        "
-      >
-        <!-- Left Button -->
-        <button
-          class="btn btn-detail"
-          style="border: 1px black solid"
-          onclick="window.location.href='{{ url_for('main.index') }}'"
-        >
-          Back to Dashboard
-        </button>
-
-        <!-- Right Button -->
-        <!-- Report Button -->
-        {% if current_user.type == "user" %}
-        <button
-          class="btn btn-danger"
-          data-toggle="modal"
-          data-target="#reportModal"
-        >
-          Report Post
-        </button>
-        {%else%}
-        <form
-          action="{{ url_for('main.delete_post', post_id=post.id) }}"
-          method="post"
-        >
-          <input type="submit" value="Delete" class="btn btn-danger" />
-        </form>
+      <!-- Image Section Below -->
+      <div class="post-image-container">
+        {% if post.image %}
+        <img
+          src="{{ url_for('main.get_image', post_id=post.id) }}"
+          alt="Post Image"
+        />
+        {% else %}
+        <p>No image available for this post.</p>
         {% endif %}
-        <!-- Modal -->
-        <div
-          class="modal fade"
-          id="reportModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="reportModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="reportModalLabel">Report Post</h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
+      </div>
+    </div>
+
+    {% if current_user.type == "admin" %}
+    <h2>Report:</h2>
+    {% if reports %} {% for report in reports %}
+    <div class="postbody">Reported Reason: {{ report.report_reason }}</div>
+    {% endfor %} {% else %}
+    <div class="postbody">No reports found for this post.</div>
+    {% endif %} {% endif %}
+
+    <div
+      style="
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between; /* This will push the buttons to the sides */
+      "
+    >
+      <!-- Left Button -->
+      <button
+        class="btn btn-detail"
+        style="border: 1px black solid"
+        onclick="window.location.href='{{ url_for('main.index') }}'"
+      >
+        Back to Dashboard
+      </button>
+
+      <!-- Right Button -->
+      <!-- Report Button -->
+      {% if current_user.type == "user" %}
+      <button
+        class="btn btn-danger"
+        data-toggle="modal"
+        data-target="#reportModal"
+      >
+        Report Post
+      </button>
+      {%else%}
+      <form
+        action="{{ url_for('main.delete_post', post_id=post.id) }}"
+        method="post"
+      >
+        <input type="submit" value="Delete" class="btn btn-danger" />
+      </form>
+      {% endif %}
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="reportModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="reportModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="reportModalLabel">Report Post</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form
+                id="reportForm"
+                action="{{ url_for('main.report_post', post_id=post.id) }}"
+                method="post"
+              >
+                <div class="form-group">
+                  <label for="reportReason">Reason for Reporting</label>
+                  <textarea
+                    class="form-control"
+                    id="reportReason"
+                    name="report_reason"
+                    rows="3"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger">
+                  Submit Report
                 </button>
-              </div>
-              <div class="modal-body">
-                <form
-                  id="reportForm"
-                  action="{{ url_for('main.report_post', post_id=post.id) }}"
-                  method="post"
-                >
-                  <div class="form-group">
-                    <label for="reportReason">Reason for Reporting</label>
-                    <textarea
-                      class="form-control"
-                      id="reportReason"
-                      name="report_reason"
-                      rows="3"
-                      required
-                    ></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-danger">
-                    Submit Report
-                  </button>
-                </form>
-              </div>
+              </form>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="poster-detail-cont">
-      <div
-        style="
-          font-size: 1.4em;
-          text-align: center;
-          font-weight: bold;
-          border-radius: 8px 8px 0 0;
-          word-break: break-word;
-          overflow-wrap: anywhere;
-          white-space: normal;
-          margin-bottom: 20px;
-        "
-      >
-        Poster Information
-      </div>
-      <div class="postbody">
-        Name: {{ post.writer.firstname }} {{ post.writer.lastname }}
-      </div>
-      <div class="postbody">Email: {{ post.writer.email }}</div>
-      {% if post.writer.phonenum %}
-      <div class="postbody">
-        Phone number: +1 ({{ post.writer.phonenum[:3] }}) {{
-        post.writer.phonenum[3:6] }} {{ post.writer.phonenum[6:] }}
-      </div>
-      {% else %}
-      <div class="postbody">Phone number: Not provided</div>
-      {% endif %}
-      <div
-        style="
-          padding-top: 20px;
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-        "
-      >
-        {% if post.writer == current_user %}
-        <button
-          class="btn btn-detail"
-          style="border: 1px solid black;"
-          onclick="window.location.href='{{ url_for('main.display_profile',user_id = current_user.id) }}'"
-        >
-          Go to Profile
-        </button>
-        {% else %}
-        <button
-          class="btn btn-detail"
-          style="border: 1px solid black;"
-          onclick="window.location.href='{{ url_for('main.display_profile', user_id=post.writer.id) }}'"
-        >
-          View Profile
-        </button>
-        {% endif %}
       </div>
     </div>
   </body>

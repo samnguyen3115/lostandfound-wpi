@@ -122,7 +122,6 @@ a:hover {
   border-radius: 5px;
   background-color: #ffd23e;
   color: black;
-  padding: 5px;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -163,11 +162,6 @@ a:hover {
   border-radius: 10px;
 }
 
-.post_top_bar {
-  width: 100%;
-  background-color: #ac2b37;
-  color: white;
-}
 .post_choice_bar {
   width: 100%;
   background-color: #ac2b37;
@@ -183,10 +177,8 @@ a:hover {
   width: 100%;
 }
 
-
-
 .postbody-container > .postbody {
-  margin: 0;  /* Remove default margin to make them sit near the edges */
+  margin: 0; /* Remove default margin to make them sit near the edges */
 }
 
 @media (max-width: 768px) {
@@ -201,9 +193,6 @@ a:hover {
     margin-bottom: 10px;
   }
 }
-
-
-
 
 .choice-container {
   display: flex;
@@ -309,12 +298,6 @@ a:hover {
   background-color: #fff;
 }
 
-.post-image {
-  max-width: 70%;
-  height: auto;
-  border-radius: 8px;
-}
-
 .places-container {
   display: flex;
   flex-direction: column;
@@ -374,6 +357,7 @@ a:hover {
 
 .post-box {
   padding: 15px;
+  min-width: 33%;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fff;
@@ -384,7 +368,7 @@ a:hover {
 }
 
 .post-box:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
   color: black;
 }
 
@@ -404,28 +388,61 @@ a:hover {
   color: #666;
   line-height: 1.5;
 }
-.post-detail-cont {
-  width: 60%;
-  padding: 20px;
-  margin-left: 20px;
-  background-color: white;
+.detail-cont, .poster-detail-cont {
+  width: 48%; /* Make sure both take equal space */
+  padding: 15px;
   border-radius: 8px;
-  border: 1px black solid;
-  float: left;
-  box-sizing: border-box;
+  border: 1px solid #000000;
 }
 
-.poster-detail-cont {
-  width: 35%;
+.post-detail-cont {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  width: 100%;
   padding: 20px;
-  margin-left: 20px;
   background-color: white;
   border-radius: 8px;
-  border: 1px black solid;
-  float: left;
+  border: 1px solid black;
   box-sizing: border-box;
+  align-items: center;
 }
+
+.post-detail-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between; /* Space between details */
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.post-details {
+  width: 48%; /* Make sure both take equal space */
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.post-image-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.post-image-container img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 8px;
+  border: 2px solid #000000;
+}
+
 @media screen and (min-width: 1200px) {
+  .post-box {
+    width: 102%;
+  }
 }
 
 @media screen and (min-width: 800px) and (max-width: 1200px) {
@@ -445,18 +462,6 @@ a:hover {
     gap: 20px;
   }
 
-  .post-details {
-    flex: 1;
-  }
-
-  .post-image {
-    flex: 0 0 auto;
-  }
-
-  .post-image img {
-    max-width: 300px;
-    height: auto;
-  }
   .post-detail-cont {
     width: 96%;
     margin-right: 10px;
@@ -468,9 +473,21 @@ a:hover {
 }
 
 @media screen and (max-width: 800px) {
+  .post-detail-container {
+    flex-direction: column; /* Stack in mobile view */
+    align-items: center;
+  }
+
+  .detail-cont, .poster-detail-cont {
+    width: 90%;
+  }
+
+  .post-image-container img {
+    max-width: 100%;
+  }
   .postbody {
-    width: 100%; 
-    text-align: left;  
+    width: 100%;
+    text-align: left;
   }
   .post-box {
     width: 99%;
@@ -483,13 +500,6 @@ a:hover {
     align-items: center;
   }
 
-  .post-details {
-    width: 100%;
-  }
-
-  .post-image img {
-    max-width: 100%;
-  }
   .post-detail-cont {
     width: 92%;
     margin-right: 10px;
@@ -504,13 +514,6 @@ a:hover {
   display: flex;
   align-items: flex-start;
   gap: 20px;
-}
-
-.post-image img {
-  max-width: 150px;
-  max-height: 150px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
 }
 
 .post-details {
@@ -535,7 +538,7 @@ a:hover {
   border: 1px solid black;
 }
 
-.card-header{
+.card-header {
   background-color: #ac2b37;
   color: white;
   text-align: center;
@@ -551,7 +554,8 @@ a:hover {
   padding: 10px 0; /* Add some spacing */
 }
 
-.pagination a, .pagination span {
+.pagination a,
+.pagination span {
   padding: 10px 15px;
   border: 1px solid #333; /* Match the .postlist border color */
   border-radius: 5px;
@@ -563,7 +567,7 @@ a:hover {
 }
 
 .pagination a:hover {
-  background-color: #ffd23e;
+  background-color: #f8d563;
   color: black;
 }
 
@@ -572,4 +576,52 @@ a:hover {
   color: white;
   font-weight: bold;
   border: 1px solid #ac2b37;
+}
+
+.post_top_bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensures search moves to the right */
+  flex-wrap: wrap; /* Wraps on small screens */
+  margin-bottom: 20px;
+  width: 100%;
+  background-color: rgb(178, 73, 83);
+  color: white;
+  padding: 10px;
+}
+.sort-form {
+  display: flex;
+  gap: 10px; /* Space between elements */
+  align-items: left;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 70%;
+}
+.search-form {
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  gap: 5px;
+  align-items: right;
+  margin-left: auto; /* Pushes search box to the right */
+}
+
+.search-input {
+  padding: 8px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
 }

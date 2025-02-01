@@ -39,7 +39,6 @@ def login():
             return redirect(url_for('auth.login'))
         
         login_user(user, remember=lform.remember_me.data)     
-        flash(f'The user has successfully logged in! Authenticated: {current_user.is_authenticated}',"flash-container")
         return redirect(url_for('main.index'))
 
     return render_template('login.html', form=lform)

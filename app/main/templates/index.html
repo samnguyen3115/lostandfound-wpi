@@ -3,6 +3,34 @@
 <h1 style="text-align: center; margin-top: 70px">
   Welcome to Wpi Lost And Found Portal
 </h1>
+{% if current_user.is_anonymous %}
+<div
+  style="
+    display: flex;
+    justify-self: center;
+    border: 2px rgb(70, 70, 36) solid;
+    border-radius: 5px;
+    width: fit-content;
+    padding: 8px;
+    padding-top: 12px;
+    padding-bottom: 0px;
+    font-size: 22px;
+    background-color: #fbf6ad;
+    color: black;
+  "
+>
+  <p>
+    New to the site? Please read our
+    <a
+      style="color: #ac2b37; text-decoration: none"
+      href="{{ url_for('main.guide') }}"
+      style="margin-left: 0.5px; margin-right: 0.5px"
+      >Guide</a
+    >
+    page before posting
+  </p>
+</div>
+{%endif%}
 <br />
 <div class="postlist">
   <!-- TODO: (milestone1) Format posts -->
@@ -17,7 +45,7 @@
           value="found"
           class="choice-button1 {% if request.args.get('post_type') == 'found' %}active{% endif %}"
         >
-          Found Post
+          Found Reports
         </button>
         <button
           type="submit"
@@ -25,36 +53,69 @@
           value="lost"
           class="choice-button2 {% if request.args.get('post_type') == 'lost' %}active{% endif %}"
         >
-          Lost Post
+          Lost Reports
         </button>
       </div>
     </form>
   </div>
 
   <div class="post_top_bar">
-    <form class="sort" method="GET" action="{{ url_for('main.index') }}">
-      <div class="form-group">
-        <!-- Preserve the post_type filter -->
-        <input
-          type="hidden"
-          name="post_type"
-          value="{{ request.args.get('post_type', '') }}"
-        />
+    <form class="sort-form" method="GET" action="{{ url_for('main.index') }}">
+      <input
+        type="hidden"
+        name="post_type"
+        value="{{ request.args.get('post_type', 'found') }}"
+      />
 
-        <!-- Color Filter -->
-        <label for="color_filter">{{ form.color_filter.label }}</label>
-        {{ form.color_filter(class="form-select", id="color_filter") }}
+      <!-- Color Filter -->
+      <label
+        style="text-align: center; display: flex; justify-content: center;font-size: 20px"
+        for="color_filter"
 
-        <!-- Building Filter -->
-        <label for="building_filter">{{ form.building_filter.label }}</label>
-        {{ form.building_filter(class="form-select", id="building_filter") }}
+        >{{ form.color_filter.label }}</label
+      >
+      {{ form.color_filter(class="form-select", id="color_filter") }}
 
-        <!-- Submit Button for applying filters -->
-        {{ form.submit(class="button", value="Filter") }}
+      <!-- Building Filter -->
+      <label
+        style="text-align: center; display: flex; justify-content: center;font-size: 20px"
+        for="building_filter"
+        >{{ form.building_filter.label }}</label
+      >
+      {{ form.building_filter(class="form-select", id="building_filter") }}
 
-        <!-- Submit2 Button for refreshing the view -->
-        {{ form.submit2(class="button button2", value="Reset") }}
-      </div>
+      <!-- Submit Button for Applying Filters -->
+      {{ form.submit(class="button", value="Filter") }}
+
+      <!-- Reset Button -->
+      {{ form.submit2(class="button button2", value="Reset") }}
+    </form>
+
+    <!-- Search Form (Aligned to the Right) -->
+    <form method="GET" action="{{ url_for('main.index') }}" class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search by item name..."
+        value="{{ search_query or '' }}"
+        class="search-input"
+      />
+      <input
+        type="hidden"
+        name="color_filter"
+        value="{{ request.args.get('color_filter', '') }}"
+      />
+      <input
+        type="hidden"
+        name="building_filter"
+        value="{{ request.args.get('building_filter', '') }}"
+      />
+      <input
+        type="hidden"
+        name="post_type"
+        value="{{ request.args.get('post_type', 'found') }}"
+      />
+      <button type="submit" class="button">Search</button>
     </form>
   </div>
 

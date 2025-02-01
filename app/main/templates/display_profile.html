@@ -70,7 +70,7 @@ content %}
           value="found"
           class="choice-button1 {% if request.args.get('post_type') == 'found' %}active{% endif %}"
         >
-          Found Post
+          Found Reports
         </button>
         <button
           type="submit"
@@ -78,7 +78,7 @@ content %}
           value="lost"
           class="choice-button2 {% if request.args.get('post_type') == 'lost' %}active{% endif %}"
         >
-          Lost Post
+          Lost Reports
         </button>
       </div>
     </form>
@@ -115,7 +115,7 @@ content %}
   </div>
 
   <div style="width: 100%; height: 10px"></div>
-  {%if current_user.type=="admin"%}
+  {%if current_user.type!="admin"%}
   <div class="post-container">
     {% for post in posts %}
     <a

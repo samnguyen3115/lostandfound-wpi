@@ -7,7 +7,6 @@ from app.main.models import Post, Tag,Building
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlo
 from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Mail,Message
 
 app = create_app(Config)
 
